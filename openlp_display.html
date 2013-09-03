@@ -48,6 +48,8 @@ sup {
 .frame{
 	height:786px;
 	width:1024px;
+	left:0px;
+	right0px;
 	position:absolute;
 	overflow:hidden;
 }
@@ -62,6 +64,10 @@ sup {
 	var height = 786;
     var transition = %s;
     %s
+	var frame = document.getElementById(current_frame_id);
+	frame.style.opacity = 1;
+	frame = document.getElementById(next_frame_id);
+	frame.style.opacity = 0;
 
     function show_image(src){
         var img = document.getElementById('image');
@@ -134,53 +140,63 @@ sup {
 		*/
 		var current_frame = document.getElementById(current_frame_id);
 		var next_frame = document.getElementById(next_frame_id);
+		current_frame.style.opacity = 1;
+		next_frame.style.opacity = 0;
 		next_frame.innerHTML = next_item;
 		if(!transition){
-            current_frame.style.opacity = 0;
-			next_frame.style.opacity = 1;
+            no_animation(current_frame, next_frame);
 			change_frames(current_frame_id, next_frame_id);
 			return;
         }
-		if(timer != null)
-            clearTimeout(timer);
+		/* if(timer != null)
+            clearTimeout(timer); */
 		switch(animation_effect){
             case 'FadeInOut':
-                animation_fadeinout(current_frame, next_frame, 200);
+				animation_fadeinout(current_frame, next_frame, 100);
 				change_frames(current_frame_id, next_frame_id);
-                break;
+				break;
 			case 'FadeIn':
-                animation_fadein(current_frame, next_frame, 200);
+                animation_fadein(current_frame, next_frame, 100);
 				change_frames(current_frame_id, next_frame_id);
-                break;
+				break;
             case 'Left':
-                animation_moveleft(current_frame, next_frame, 20);
+				current_frame.style.left = '0px';
+				next_frame.style.left = '0px';
+                animation_moveleft(current_frame, next_frame, 10);
 				change_frames(current_frame_id, next_frame_id);
-                break;
+				break;
             case 'Right':
 				animation_fadeinout(current_frame, next_frame, 200);
 				change_frames(current_frame_id, next_frame_id);
                 break;
         }
 	}
+	
 	function change_frames(current_id, next_id){
 		var temp = current_frame_id;
 		current_frame_id = next_frame_id;
 		next_frame_id = temp;
 	}
 	
+	function no_animation(current_frame, next_frame){
+		current_frame.style.opacity = 0;
+		next_frame.style.opacity = 1;
+	}
+	
 	function animation_fadeinout(current_frame, next_frame, delay){
 		/*
 		Animation at first fade out current frame, then fade in next frame
 		*/
-		if(current_frame.style.opacity != '0.1'){
-			current_frame.style.opacity -= '0.1';
-			timer = window.setTimeout(function(){animation_fadeinout(current_frame, next_frame)}, delay);
+		if(parseFloat(current_frame.style.opacity) > 0.2){
+			current_frame.style.opacity = parseFloat(current_frame.style.opacity) - 0.1;
+			timer = window.setTimeout(function(){animation_fadeinout(current_frame, next_frame, delay)}, delay);
 			return;
-		}else if(next_frame.style.opacity != '1'){
-			next_frame.style.opacity += '0.1';
-			timer = window.setTimeout(function(){animation_fadeinout(current_frame, next_frame)}, delay);
+		}else if(parseFloat(next_frame.style.opacity) <= 1){
+			next_frame.style.opacity = parseFloat(next_frame.style.opacity) + 0.1;
+			timer = window.setTimeout(function(){animation_fadeinout(current_frame, next_frame, delay)}, delay);
 			return;
 		}
+		current_frame.style.opacity = 0;
 		timer = null;
 	}
 	
@@ -188,9 +204,9 @@ sup {
 		/*
 		Animation fade in next frame, and then hide current
 		*/
-		if(next_frame.style.opacity != '1'){
-			next_frame.style.opacity += '0.1';
-			timer = window.setTimeout(function(){animation_fadeinout(current_frame, next_frame)}, delay);
+		if(parseFloat(next_frame.style.opacity) <= 1){
+			next_frame.style.opacity = parseFloat(next_frame.style.opacity) + 0.1;
+			timer = window.setTimeout(function(){animation_fadeinout(current_frame, next_frame, delay)}, delay);
 			return;
 		}
 		current_frame.style.opacity = '0';
@@ -201,17 +217,27 @@ sup {
 		/*
 		Animation move current frame and next frame from right to left
 		*/
+		 
 		if(parseInt(current_frame.style.left) == 0){
 			next_frame.style.left = width + 'px';
 		}
-		next_frame.style.left = parseInt(next_frame.style.left) - 10 + 'px';
+		next_frame.style.opacity = '1';
+		current_frame.style.opacity = '1';
+		
+		var move = parseInt(next_frame.style.left) - 10;
+		if(move < 0){
+			move = 0;
+		}
+		next_frame.style.left = move + 'px';
 		current_frame.style.left = parseInt(current_frame.style.left) - 10 + 'px';
 		
 		if(parseInt(next_frame.style.left) > 0){
-			timer = window.setTimeout(function(){animation_moveleft(current_frame, next_frame)}, delay);
+			timer = window.setTimeout(function(){animation_moveleft(current_frame, next_frame, delay)}, delay);
 			return;
 		}
 		timer = null;
+		current_frame.style.opacity = '0';
+		current_frame.style.left = '0px';
 	}
 	
     function text_fade(id, new_text){

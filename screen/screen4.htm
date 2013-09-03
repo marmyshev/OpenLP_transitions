@@ -53,6 +53,7 @@
 		next_frame.innerHTML = next_item;
 		if(!transition){
             no_animation(current_frame, next_frame);
+			change_frames(current_frame_id, next_frame_id);
 			return;
         }
 		/* if(timer != null)
@@ -88,7 +89,6 @@
 	function no_animation(current_frame, next_frame){
 		current_frame.style.opacity = 0;
 		next_frame.style.opacity = 1;
-		change_frames(current_frame_id, next_frame_id);
 	}
 	
 	function animation_fadeinout(current_frame, next_frame, delay){
