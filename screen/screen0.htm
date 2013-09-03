@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Без названия 1</title>
+<style>
+#frame1{
+	background:maroon;
+}
+#frame2{
+	background:blue
+}
+#frame3{
+	background:black
+}
+#screen{
+	height:786px;
+	width:1024px;
+	overflow:hidden;
+	position:relative;
+}
+
+.frame{
+	height:786px;
+	width:1024px;
+	position:absolute;
+}
+.frame h1{margin:auto; display:block; font-size:58px; color:#fff;}
+</style>
+
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+    var sh;
+    var sw;
+    var act='#frame1';
+    var effect='fade';
+    var speed=700;
+	$(function(){
+	sh = $('#screen').height();
+    sw = $('#screen').width();
+	$('select').children('option').selectedIndex=0;
+	$('#frame2').hide();
+	effect=$('select').options[this.selectedIndex].value;
+	//alert (act);
+	});
+	function on(id){
+		var chn=$('#'+id);
+		if ($(act).attr('id')!=id){
+			if (effect=='fade'){
+				//chn.fadeOut(0);
+				chn.css({'top':'0', 'left':'0'});
+				$(act).fadeOut(speed);
+				chn.fadeIn(speed);
+				
+			}
+			if (effect=='left'){
+				chn.fadeIn(0);
+				chn.css({'top':'0', 'left':sw+'px'});
+				$(act).animate( { left:'-'+sw+"px" }, speed/2 );
+				chn.animate( { left:"0" }, speed/2 );
+				
+			}
+			if (effect=='top'){
+				chn.fadeIn(0);
+				chn.css({'top':sh+'px', 'left':'0'});
+				$(act).animate( { top:'-'+sh+"px" }, speed/2 );
+				chn.animate( { top:"0" }, speed/2 );
+				
+			}			
+
+		act='#'+chn.attr('id');
+		}
+	}
+	function change(ef){
+	effect=ef;
+	
+	}
+	
+</script>
+</head>
+
+<body>
+<div id="screen">
+<div class="frame" id="frame1"><h1>1</h1></div>
+<div class="frame" id="frame2"><h1>2</h1><img src=keynote.png /></div>
+<div class="frame" id="frame3"><h1>3</h1></div>
+</div>
+<div id="controls">
+<form>
+<select name="effect" id="effect" onchange="change(this.options[this.selectedIndex].value);">
+				<option value="fade">Fade</option>
+				<option value="left">Left</option>
+				<option value="top">Top</option>
+
+			</select>
+<input name="Button1" onclick="on('frame1');" type="button" value="1 слой" />
+<input name="Button2" onclick="on('frame2');" type="button" value="2 слой" />
+<input name="Button3" onclick="on('frame3');" type="button" value="3 слой" />
+</form>
+</div>
+</body>
+
+</html>

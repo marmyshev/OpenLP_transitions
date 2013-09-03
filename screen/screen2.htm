@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Без названия 1</title>
+<style>
+#frame1{
+	background:yellow;
+}
+#frame2{
+	background:blue
+}
+#frame3{
+	background:black
+}
+#screen{
+	height:786px;
+	width:1024px;
+	overflow:hidden;
+	position:relative;
+}
+
+.frame{
+	height:786px;
+	width:1024px;
+	position:absolute;
+}
+.frame h1{margin:auto; display:block; font-size:58px; color:#fff;}
+</style>
+
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+    var sh;
+    var sw;
+    var act='#frame1';
+    var effect='fade';
+    var speed=700;
+	$(function(){
+	sh = $('#screen').height();
+    sw = $('#screen').width();
+	$('select').children('option').selectedIndex=0;
+	$('#frame2').hide();
+	$('#frame3').hide();
+	//effect=$('select').options[this.selectedIndex].value;
+	//alert (act);
+	});
+	function on(){
+	var id;
+	if (act=='#frame1')
+	{
+		id='frame2'; $('#go').val('1 слайд');
+	} 
+	else if (act=='#frame2')
+	{
+		id='frame3'; $('#go').val('3 слайд');
+	} 
+	else 
+	{
+		id='frame1';  $('#go').val('2 слайд');
+	}
+		var chn=$('#'+id);
+		if ($(act).attr('id')!=id){
+			if (effect=='fadeinout'){
+				//chn.fadeOut(0);
+				chn.css({'top':'0', 'left':'0'});
+				$(act).fadeOut(speed);
+				chn.fadeIn(speed);
+				
+			}
+			if (effect=='fadein'){
+				//chn.fadeOut(0);
+				chn.css({'top':'0', 'left':'0'});
+				chn.fadeIn(speed);
+				$(act).fadeOut(0);
+				
+			}
+			if (effect=='fadeout'){
+				//chn.fadeOut(0);
+				chn.css({'top':'0', 'left':'0'});
+				chn.fadeIn(0);
+				$(act).fadeOut(speed);
+				
+			}
+			if (effect=='left'){
+				chn.fadeIn(0);
+				chn.css({'top':'0', 'left':sw+'px'});
+				$(act).animate( { left:'-'+sw+"px" }, speed/2 );
+				chn.animate( { left:"0" }, speed/2 );
+				
+			}
+			if (effect=='right'){
+				chn.fadeIn(0);
+				chn.css({'top':'0', 'right':sw+'px'});
+				$(act).animate( { right:'-'+sw+"px" }, speed/2 );
+				chn.animate( { right:"0" }, speed/2 );
+				
+			}
+			if (effect=='top'){
+				chn.fadeIn(0);
+				chn.css({'top':sh+'px', 'left':'0'});
+				$(act).animate( { top:'-'+sh+"px" }, speed/2 );
+				chn.animate( { top:"0" }, speed/2 );
+				
+			}			
+
+		act='#'+chn.attr('id');
+		}
+	}
+	function change(ef){
+	effect=ef;
+	
+	}
+	
+</script>
+</head>
+
+<body>
+<div id="screen">
+<div class="frame" id="frame1"><h1>1 ldfkajs;dlfka s;ldfkja ;lskdjfa; lskdjf asl;dfj a;lsdkfj a;lskdjf </h1></div>
+<div class="frame" id="frame2"><h1>2 fasdfasd fpoiquwpeoriu adsfaysuyrq werqpo weruqopweir paoiau dsoifu a</h1><img src=keynote.png /></div>
+<div class="frame" id="frame3"><h1>3 iofupaosidu fpaoisdyqpwoieru qpwoieruq woieurpq owieur poi u</h1></div>
+</div>
+<div id="controls">
+<form>
+<select name="effect" id="effect" onchange="change(this.options[this.selectedIndex].value);">
+				<option value="fadeinout">Fade In/Out</option>
+				<option value="fadein">Fade In</option>
+				<option value="fadeout">Fade Out</option>
+				<option value="left">Left</option>
+				<option value="right">Right</option>
+				<option value="top">Top</option>
+
+			</select>
+<input id='go' name="Button1" onclick="on();" type="button" value="2 слайд" />
+
+</form>
+</div>
+</body>
+
+</html>
