@@ -136,8 +136,7 @@ sup {
 		var next_frame = document.getElementById(next_frame_id);
 		next_frame.innerHTML = next_item;
 		if(!transition){
-            var current_frame = document.getElementById(current_frame);
-			current_frame.style.opacity = 0;
+            current_frame.style.opacity = 0;
 			next_frame.style.opacity = 1;
 			change_frames(current_frame_id, next_frame_id);
 			return;
