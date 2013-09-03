@@ -149,6 +149,10 @@ sup {
                 animation_fadeinout(current_frame, next_frame, 200);
 				change_frames(current_frame_id, next_frame_id);
                 break;
+			case 'FadeIn':
+                animation_fadein(current_frame, next_frame, 200);
+				change_frames(current_frame_id, next_frame_id);
+                break;
             case 'Left':
                 animation_moveleft(current_frame, next_frame, 20);
 				change_frames(current_frame_id, next_frame_id);
@@ -171,16 +175,28 @@ sup {
 		*/
 		if(current_frame.style.opacity != '0.1'){
 			current_frame.style.opacity -= '0.1';
-			timer = window.setTimeout(function(){animation_fadeinout(current_id, next_id)}, delay);
+			timer = window.setTimeout(function(){animation_fadeinout(current_frame, next_frame)}, delay);
 			return;
-		}else if(current_frame.style.opacity != '1'){
+		}else if(next_frame.style.opacity != '1'){
 			next_frame.style.opacity += '0.1';
-			timer = window.setTimeout(function(){animation_fadeinout(current_id, next_id)}, delay);
+			timer = window.setTimeout(function(){animation_fadeinout(current_frame, next_frame)}, delay);
 			return;
 		}
 		timer = null;
 	}
 	
+	function animation_fadein(current_frame, next_frame, delay){
+		/*
+		Animation fade in next frame, and then hide current
+		*/
+		if(next_frame.style.opacity != '1'){
+			next_frame.style.opacity += '0.1';
+			timer = window.setTimeout(function(){animation_fadeinout(current_frame, next_frame)}, delay);
+			return;
+		}
+		current_frame.style.opacity = '0';
+		timer = null;
+	}
 	
 	function animation_moveleft(current_frame, next_frame, delay){
 		/*
@@ -193,7 +209,7 @@ sup {
 		current_frame.style.left = parseInt(current_frame.style.left) - 10 + 'px';
 		
 		if(parseInt(next_frame.style.left) > 0){
-			timer = window.setTimeout(function(){animation_moveleft(current_id, next_id)}, delay);
+			timer = window.setTimeout(function(){animation_moveleft(current_frame, next_frame)}, delay);
 			return;
 		}
 		timer = null;
