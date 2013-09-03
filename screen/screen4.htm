@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>OpenLP Display</title>
+<style>
+#frame1{
+	background:maroon;
+}
+#frame2{
+	background:blue
+}
+#screen{
+	height:786px;
+	width:1024px;
+	overflow:hidden;
+	position:relative;
+}
+
+.frame{
+	height:786px;
+	width:1024px;
+	left:0px;
+	right0px;
+	position:absolute;
+	overflow:hidden;
+}
+.frame h1{margin:auto; display:block; font-size:58px; color:#fff;}
+</style>
+
+<script type="text/javascript">
+    var timer = null;
+	var current_frame_id = 'frame1';
+	var next_frame_id = 'frame2';
+	var animation_effect = 'FadeInOut';
+	var width = 1024;
+	var height = 786;
+    var transition = true;
+	var frame = document.getElementById(current_frame_id);
+	frame.style.opacity = 1;
+	frame = document.getElementById(next_frame_id);
+	frame.style.opacity = 0;
+	
+	function show_next(next_item){
+		/*
+		Show next frame
+		*/
+		var current_frame = document.getElementById(current_frame_id);
+		var next_frame = document.getElementById(next_frame_id);
+		current_frame.style.opacity = 1;
+		next_frame.style.opacity = 0;
+		next_frame.innerHTML = next_item;
+		if(!transition){
+            no_animation(current_frame, next_frame);
+			return;
+        }
+		/* if(timer != null)
+            clearTimeout(timer); */
+		switch(animation_effect){
+            case 'FadeInOut':
+				animation_fadeinout(current_frame, next_frame, 100);
+				change_frames(current_frame_id, next_frame_id);
+				break;
+			case 'FadeIn':
+                animation_fadein(current_frame, next_frame, 100);
+				change_frames(current_frame_id, next_frame_id);
+				break;
+            case 'Left':
+				current_frame.style.left = '0px';
+				next_frame.style.left = '0px';
+                animation_moveleft(current_frame, next_frame, 10);
+				change_frames(current_frame_id, next_frame_id);
+				break;
+            case 'Right':
+				animation_fadeinout(current_frame, next_frame, 200);
+				change_frames(current_frame_id, next_frame_id);
+                break;
+        }
+	}
+	
+	function change_frames(current_id, next_id){
+		var temp = current_frame_id;
+		current_frame_id = next_frame_id;
+		next_frame_id = temp;
+	}
+	
+	function no_animation(current_frame, next_frame){
+		current_frame.style.opacity = 0;
+		next_frame.style.opacity = 1;
+		change_frames(current_frame_id, next_frame_id);
+	}
+	
+	function animation_fadeinout(current_frame, next_frame, delay){
+		/*
+		Animation at first fade out current frame, then fade in next frame
+		*/
+		if(parseFloat(current_frame.style.opacity) > 0.2){
+			current_frame.style.opacity = parseFloat(current_frame.style.opacity) - 0.1;
+			timer = window.setTimeout(function(){animation_fadeinout(current_frame, next_frame, delay)}, delay);
+			return;
+		}else if(parseFloat(next_frame.style.opacity) <= 1){
+			next_frame.style.opacity = parseFloat(next_frame.style.opacity) + 0.1;
+			timer = window.setTimeout(function(){animation_fadeinout(current_frame, next_frame, delay)}, delay);
+			return;
+		}
+		current_frame.style.opacity = 0;
+		timer = null;
+	}
+	
+	function animation_fadein(current_frame, next_frame, delay){
+		/*
+		Animation fade in next frame, and then hide current
+		*/
+		if(parseFloat(next_frame.style.opacity) <= 1){
+			next_frame.style.opacity = parseFloat(next_frame.style.opacity) + 0.1;
+			timer = window.setTimeout(function(){animation_fadeinout(current_frame, next_frame, delay)}, delay);
+			return;
+		}
+		current_frame.style.opacity = '0';
+		timer = null;
+	}
+	
+	function animation_moveleft(current_frame, next_frame, delay){
+		/*
+		Animation move current frame and next frame from right to left
+		*/
+		 
+		if(parseInt(current_frame.style.left) == 0){
+			next_frame.style.left = width + 'px';
+		}
+		next_frame.style.opacity = '1';
+		current_frame.style.opacity = '1';
+		
+		var move = parseInt(next_frame.style.left) - 10;
+		if(move < 0){
+			move = 0;
+		}
+		next_frame.style.left = move + 'px';
+		current_frame.style.left = parseInt(current_frame.style.left) - 10 + 'px';
+		
+		if(parseInt(next_frame.style.left) > 0){
+			timer = window.setTimeout(function(){animation_moveleft(current_frame, next_frame, delay)}, delay);
+			return;
+		}
+		timer = null;
+		current_frame.style.opacity = '0';
+		current_frame.style.left = '0px';
+	}
+	
+	
+	/* support functions */
+	function on(){
+		var html = '';
+		if(current_frame_id == 'frame1'){
+			html = '<h1>2 ' + animation_effect + '</h1>';
+		} else{
+			html = '<h1>1 ' + animation_effect + '</h1>';
+		}
+		show_next(html);
+	}
+	function change(ef){
+		animation_effect=ef;
+	}
+	
+	function hide_current(){
+		var current_frame = document.getElementById(current_frame_id);
+		current_frame.style.opacity = 0;
+	}
+	function hide_next(){
+		var next_frame = document.getElementById(next_frame_id);
+		next_frame.style.opacity = 0;
+	}
+	/* support functions */
+	
+</script>
+</head>
+
+<body>
+<div id="screen">
+<div class="frame" id="frame1"></div>
+<div class="frame" id="frame2"></div>
+</div>
+<div id="controls">
+<form>
+<select name="effect" id="effect" onchange="change(this.options[this.selectedIndex].value);">
+				<option value="FadeInOut">FadeInOut</option>
+				<option value="FadeIn">FadeIn</option>
+				<option value="Left">Left</option>
+				<option value="zoom">Zoom</option>
+</select>
+<input id='go' name="Button1" onclick="on();" type="button" value="Snow next" />
+<input id='go' name="Button2" onclick="hide_current();" type="button" value="Hide current" />
+<input id='go' name="Button3" onclick="hide_next();" type="button" value="Hide next" />
+
+</form>
+</div>
+</body>
+
+</html>
